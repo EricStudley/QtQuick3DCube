@@ -1,5 +1,8 @@
 #pragma once
 
+#include <QtMath>
+#include <QQuaternion>
+#include <QTransform>
 #include <QMatrix4x4>
 #include <QVariantList>
 

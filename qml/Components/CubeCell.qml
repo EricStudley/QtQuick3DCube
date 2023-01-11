@@ -8,61 +8,72 @@ Node {
     scale: Qt.vector3d(cellSize - 0.01, cellSize - 0.01, cellSize - 0.01)
     position: matrix.column(3).toVector3d()
 
+//    Component.onCompleted: position = matrix.column(3).toVector3d()
+
     property alias model: model.model
 
     property matrix4x4 matrix
+
+    Behavior on matrix { PropertyAnimation { duration: 100 } }
 
     property vector3d rotationAxis: Qt.vector3d(0, 0, 0)
 
     property real rotationAngle: 0
 
-    onRotationAngleChanged: {
+//    onRotationAngleChanged: {
 //        cubeCell.position = animation.initialPosition.column(3).toVector3d()
-        rotateAroundAxis(rotationAngle, rotationAxis)
-    }
+//        rotateAroundAxis(rotationAngle, rotationAxis)
+//    }
 
-    function rotateAroundAxis(angle, axis) {
-        var m = Qt.matrix4x4()
-        m.rotate(angle, axis)
-        matrix = m.times(matrix)
-    }
+//    function rotateAroundAxis(angle, axis) {
+//        var m = Qt.matrix4x4()
+//        m.rotate(angle, axis)
+//        matrix = m.times(matrix)
+//    }
 
     Connections {
         target: cubeModel
 
         function onRotateCell(cellIndex, axis, instant) {
             if (index === cellIndex) {
+                console.log("???",axis)
+                rotate(90, axis, Node.LocalSpace)
+
 
 //                if (instant) {
-                    cubeCell.position = cubeCell.matrix.column(3).toVector3d()
-                    rotationAxis = axis
-                    rotationAngle = 90
+//                    cubeCell.position = cubeCell.matrix.column(3).toVector3d()
+//                    rotateAroundAxis(90, axis)
+//                cubeCell.rotation = Qt.quaternion(1 / Math.sqrt(2), 0, 1 / Math.sqrt(2), 0)
 //                }
 //                else {
-//                    rotationAxis = axis
+//                rotationAxis = axis
+//                rotateAroundAxis(90, axis)
+//                cubeCell.rotation = Qt.quaternion(1 / Math.sqrt(2), 0, 1 / Math.sqrt(2), 0)
+
+
 //                    animation.restart()
 //                }
             }
         }
     }
 
-//    SequentialAnimation {
-//        id: animation
+    SequentialAnimation {
+        id: animation
 
-//        property matrix4x4 initialPosition: Qt.matrix4x4()
+        property matrix4x4 initialPosition: Qt.matrix4x4()
 
-//        ScriptAction { script: animation.initialPosition = cubeCell.sceneTransform }
+        ScriptAction { script: animation.initialPosition = cubeCell.sceneTransform }
 
-//        PropertyAnimation {
-//            target: cubeCell
-//            property: "rotationAngle"
-//            from: 0
-//            to: 90
-//            duration: 100
-//        }
+        PropertyAnimation {
+            target: cubeCell
+            property: "rotationAngle"
+            from: 0
+            to: 90
+            duration: 100
+        }
 
-//        ScriptAction { script: cubeCell.position = cubeCell.matrix.column(3).toVector3d() }
-//    }
+        ScriptAction { script: cubeCell.position = cubeCell.matrix.column(3).toVector3d() }
+    }
 
     Repeater3D {
         id: model
